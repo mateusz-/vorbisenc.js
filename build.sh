@@ -32,3 +32,10 @@ cd examples
 EMCC_CFLAGS="--ignore-dynamic-linking" emmake make
 
 emcc -O2 --closure 0 -I $dir/vorbis/include -I $dir/ogg/include -L$dir/vorbis/lib/.libs -L$dir/ogg/src/.libs -lvorbis -lvorbisenc -logg $dir/node_encoder_example.c -o $dir/node_encoder_example.js
+
+cd $dir
+
+emcc --bind --js-library $dir/web-worker/web-worker-library.js -s TOTAL_MEMORY=134217728 -s EXPORTED_FUNCTIONS='["_lexy_encoder_start", "_lexy_encoder_write", "_lexy_encoder_finish"]' -I $dir/vorbis/include -I $dir/ogg/include -L$dir/vorbis/lib/.libs -L$dir/ogg/src/.libs -lvorbis -lvorbisenc -logg $dir/web-worker/web-worker.cpp -o $dir/web-worker/web-worker.js 
+cat $dir/web-worker/web-worker-message.js >> $dir/web-worker/web-worker.js
+# emcc -s ASM_JS=1 -s -s EXPORTED_FUNCTIONS='["_lexy_encoder_start", "_lexy_encoder_write", "_lexy_encoder_finish", "_lexy_test", "_lexy_write_test", "_lexy_get_buffer_length", "_lexy_get_buffer"]' -I $dir/vorbis/include -I $dir/ogg/include -L$dir/vorbis/lib/.libs -L$dir/ogg/src/.libs -lvorbis -lvorbisenc -logg $dir/web-worker/web-worker.cpp -o $dir/web-worker/web-worker.js 
+# emcc -O2 -s ASM_JS=1 -s BUILD_AS_WORKER=1 -s EXPORTED_FUNCTIONS='["_lexy_encoder_start", "_lexy_encoder_write", "_lexy_encoder_finish", "_lexy_test", "_lexy_write_test", "_lexy_get_buffer_length", "_lexy_get_buffer"]' -I $dir/vorbis/include -I $dir/ogg/include -L$dir/vorbis/lib/.libs -L$dir/ogg/src/.libs -lvorbis -lvorbisenc -logg ogg-vorbis-encoder.cpp -o vorbis.small.js
